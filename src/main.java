@@ -55,7 +55,7 @@ public class main {
 		frmFern = new JFrame();
 		frmFern.getContentPane().setBackground(new Color(255, 228, 225));
 		frmFern.setBackground(Color.WHITE);
-		frmFern.setTitle("Fern 101");
+		frmFern.setTitle("MacSim");
 		frmFern.setBounds(100, 100, 450, 300);
 		frmFern.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmFern.getContentPane().setLayout(null);

@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/home/note/JavaWorkspace/ExcelDemosWithPOI/lib/poi-ooxml-3.9-20121203.jar"/>
 	<classpathentry kind="lib" path="/home/note/JavaWorkspace/ExcelDemosWithPOI/lib/poi-ooxml-schemas-3.9-20121203.jar"/>
 	<classpathentry kind="lib" path="/home/note/JavaWorkspace/ExcelDemosWithPOI/lib/xmlbeans-2.3.0.jar"/>
+	<classpathentry kind="lib" path="/home/note/JavaWorkspace/Fern101/aspose-cells-7.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -147,13 +147,13 @@ public class Processing {
 
 	public void Match() throws IOException {
 		// Blank workbook
-		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFWorkbook workbook = new XSSFWorkbook(); 
 
 		// Create a blank sheet
 		XSSFSheet sheet = workbook.createSheet("Merge_Data");
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
-		data.put("0", new Object[] { "CHROM", "Gene Name", "POS", "REF", "ALT", "DAD_ALT", "MOM_ALT" });
+		data.put("0", new Object[] { "CHROM", "Gene Name", "POS","Effect", "REF", "ALT", "DAD_ALT", "MOM_ALT" });
 
 		int son_total = 0;
 		for (int i = 0; i < arraylist_people.size(); i++) {
@@ -194,7 +194,7 @@ public class Processing {
 					}
 				}
 				
-				data.put("" + i + 1, new Object[] { son_value[0], son_value[12], son_value[1], son_value[2],
+				data.put("" + i + 1, new Object[] { son_value[0], son_value[12], Integer.parseInt(son_value[1]),son_value[10], son_value[2],
 						son_value[3], dad_ALT, mom_ALT });
 			}
 	
@@ -225,6 +225,9 @@ public class Processing {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+	
 
 	}
 	public boolean finish(){
