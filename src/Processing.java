@@ -20,12 +20,16 @@ public class Processing {
 	private boolean finish = false;
 	ArrayList<People> arraylist_people = new ArrayList<People>();
 	String dad_file,  mom_file ,son_file, save_to_file;
-	public Processing(String dad_file, String mom_file, String son_file, String save_to_file) {
+	private String dad_filter , mom_filter ,son_filter;
+	public Processing(String dad_file, String mom_file, String son_file,String dad_filter , String mom_filter,String son_filter, String save_to_file) {
 		try {
 			this.save_to_file = save_to_file;
 			this.dad_file = dad_file;
 			this.mom_file =mom_file ;
 			this.son_file =son_file;
+			this.dad_filter = dad_filter;
+			this.mom_filter = mom_filter;
+			this.son_filter = son_filter;
 			finish = false;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -55,7 +59,7 @@ public class Processing {
 			for(int j = 0; j< 10; j++){
 			  for (int i = 0; i < arraylist_people.get(0).getTemp_list().size(); i++) { 
 				  String[] value = arraylist_people.get(0).getTemp_list().get(i);
-				  if(value[8].equalsIgnoreCase("hom")){
+				  if(value[8].equalsIgnoreCase(dad_filter)){
 					  arraylist_people.get(0).getTemp_list().remove(i);
 				  }
 				
@@ -83,7 +87,7 @@ public class Processing {
 			for(int j = 0; j< 10; j++){
 			  for (int i = 0; i < arraylist_people.get(1).getTemp_list().size(); i++) { 
 				  String[] value = arraylist_people.get(1).getTemp_list().get(i);
-				  if(value[8].equalsIgnoreCase("hom")){
+				  if(value[8].equalsIgnoreCase(mom_filter)){
 					  arraylist_people.get(1).getTemp_list().remove(i);
 				  }
 				  
@@ -117,7 +121,7 @@ public class Processing {
 				for (int i = 0; i < arraylist_people.get(2).getTemp_list().size(); i++) { 
 					  String[] value = arraylist_people.get(2).getTemp_list().get(i);
 					 
-					  if(value[8].equalsIgnoreCase("het")){
+					  if(value[8].equalsIgnoreCase(son_filter)){
 							
 						  arraylist_people.get(2).getTemp_list().remove(i);
 					  }
@@ -153,7 +157,7 @@ public class Processing {
 		XSSFSheet sheet = workbook.createSheet("Merge_Data");
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
-		data.put("0", new Object[] { "CHROM", "Gene Name", "POS","Effect", "REF", "ALT", "DAD_ALT", "MOM_ALT" });
+		data.put("0", new Object[] { "CHROM", "Gene Name", "POS","Effect","HGVS.c","HGVS.p","dbsmp_142_ID","1000GP3_AF", "REF", "ALT", "DAD_ALT", "MOM_ALT" });
 
 		int son_total = 0;
 		for (int i = 0; i < arraylist_people.size(); i++) {
@@ -194,7 +198,8 @@ public class Processing {
 					}
 				}
 				
-				data.put("" + i + 1, new Object[] { son_value[0], son_value[12], Integer.parseInt(son_value[1]),son_value[10], son_value[2],
+				data.put("" + i + 1, new Object[] { son_value[0], son_value[12], Integer.parseInt(son_value[1]),son_value[10]
+						,son_value[17],son_value[18],son_value[28],son_value[29], son_value[2],
 						son_value[3], dad_ALT, mom_ALT });
 			}
 	
