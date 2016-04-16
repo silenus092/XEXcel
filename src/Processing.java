@@ -25,8 +25,8 @@ public class Processing {
 		try {
 			this.save_to_file = save_to_file;
 			this.dad_file = dad_file;
-			this.mom_file =mom_file ;
-			this.son_file =son_file;
+			this.mom_file = mom_file ;
+			this.son_file = son_file;
 			this.dad_filter = dad_filter;
 			this.mom_filter = mom_filter;
 			this.son_filter = son_filter;
