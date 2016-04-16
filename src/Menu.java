@@ -75,20 +75,20 @@ public class Menu {
 				dialog.setVisible(true);
 			}
 		});
-		btnNewButton_2.setBounds(28, 63, 170, 23);
+		btnNewButton_2.setBounds(28, 63, 233, 23);
 		
 		JButton btnNewButton = new JButton("Autosomal Dominant");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnNewButton.setBounds(28, 99, 170, 23);
+		btnNewButton.setBounds(28, 99, 233, 23);
 		frmMacsim.getContentPane().setLayout(null);
 		frmMacsim.getContentPane().add(btnNewButton_2);
 		frmMacsim.getContentPane().add(btnNewButton);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(184, 156, 117, 67);
+		panel.setBounds(182, 187, 117, 67);
 		frmMacsim.getContentPane().add(panel);
 		
 		JMenuBar menuBar = new JMenuBar();

@@ -74,7 +74,7 @@ public class AutoRecessive {
 		textField_dad_dir.setColumns(10);
 		
 		JLabel lblDad = new JLabel("Dad:");
-		lblDad.setBounds(36, 0, 27, 15);
+		lblDad.setBounds(36, 0, 46, 15);
 		frmFern.getContentPane().add(lblDad);
 		
 		textField_mom_dir = new JTextField("");
@@ -83,7 +83,7 @@ public class AutoRecessive {
 		textField_mom_dir.setColumns(10);
 		
 		JLabel lblMom = new JLabel("Mom:");
-		lblMom.setBounds(36, 50, 35, 15);
+		lblMom.setBounds(36, 50, 70, 15);
 		frmFern.getContentPane().add(lblMom);
 		chooser_dad = new JFileChooser();
 		chooser_dad.setCurrentDirectory(new java.io.File("."));
@@ -134,7 +134,7 @@ public class AutoRecessive {
 		textField_son_dir.setColumns(10);
 		
 		JLabel lblSon = new JLabel("Son:");
-		lblSon.setBounds(36, 97, 27, 15);
+		lblSon.setBounds(36, 97, 46, 15);
 		frmFern.getContentPane().add(lblSon);
 		
 		JButton btnNewButton_2 = new JButton("Add");
@@ -224,15 +224,15 @@ public class AutoRecessive {
 		frmFern.getContentPane().add(lblStatus);
 		
 		JLabel lbl_dad_filter = new JLabel("-");
-		lbl_dad_filter.setBounds(70, 0, 46, 14);
+		lbl_dad_filter.setBounds(83, 0, 78, 14);
 		frmFern.getContentPane().add(lbl_dad_filter);
 		lbl_dad_filter.setText(dad_model);
 		JLabel lbl_mom_filter = new JLabel("-");
-		lbl_mom_filter.setBounds(70, 50, 46, 14);
+		lbl_mom_filter.setBounds(79, 51, 97, 14);
 		frmFern.getContentPane().add(lbl_mom_filter);
 		lbl_mom_filter.setText(mom_model);
 		JLabel lbl_son_filter = new JLabel("-");
-		lbl_son_filter.setBounds(70, 97, 46, 14);
+		lbl_son_filter.setBounds(83, 97, 78, 14);
 		frmFern.getContentPane().add(lbl_son_filter);
 		lbl_son_filter.setText(son_model);
 	

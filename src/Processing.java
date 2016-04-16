@@ -4,9 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -21,6 +24,8 @@ public class Processing {
 	ArrayList<People> arraylist_people = new ArrayList<People>();
 	String dad_file,  mom_file ,son_file, save_to_file;
 	private String dad_filter , mom_filter ,son_filter;
+	private int init_son_index = 0;
+	
 	public Processing(String dad_file, String mom_file, String son_file,String dad_filter , String mom_filter,String son_filter, String save_to_file) {
 		try {
 			this.save_to_file = save_to_file;
@@ -38,8 +43,20 @@ public class Processing {
 
 	}
 	public void Start(){
+		 if(!dad_file.equals("") || !dad_file.isEmpty()  ){
+			 System.out.println("Read dad");
 		 Read_data_Dad();
+		 init_son_index++;
+		 }else {
+			 System.out.println("Skip read dad");
+		 }
+		 if(!mom_file.equals("") || !mom_file.isEmpty()  ){
+			 System.out.println("Read mom");
 		 Read_data_Mom();
+		 init_son_index++;
+		 }else{
+			 System.out.println("Skip read mom");
+		 }
 		 Read_data_Son();
 		 try {
 			Match();
@@ -53,7 +70,7 @@ public class Processing {
 			File temp_dad = new File(dad_file);
 			XEXcelFileReader reader = new XEXcelFileReader(dad_file);
 			arraylist_people.add(new People(temp_dad.getName(), "dad", reader.readRows()));
-
+			
 			arraylist_people.get(0).getTemp_list().remove(0);
 			 //List<String[]> dad_list = arraylist_people.get(0).getTemp_list();
 			for(int j = 0; j< 10; j++){
@@ -65,7 +82,7 @@ public class Processing {
 				
 			  }
 			 
-			
+
 			System.out.println("Finish File: " + arraylist_people.get(0).getID() + " Status :"
 					+ arraylist_people.get(0).getStatus() + " Size: " + arraylist_people.get(0).getTemp_list().size());
 			}
@@ -79,22 +96,24 @@ public class Processing {
 
 	public void Read_data_Mom() {
 		try {
+		
 			File temp_mom = new File(mom_file);
 			XEXcelFileReader reader = new XEXcelFileReader(mom_file);
 			arraylist_people.add(new People(temp_mom.getName(), "mom", reader.readRows()));
-			arraylist_people.get(1).getTemp_list().remove(0);
+			int init_mom_index = arraylist_people.size()-1;
+			arraylist_people.get(init_mom_index).getTemp_list().remove(0);
 			// List<String[]> mom_list = arraylist_people.get(1).getTemp_list();
 			for(int j = 0; j< 10; j++){
-			  for (int i = 0; i < arraylist_people.get(1).getTemp_list().size(); i++) { 
-				  String[] value = arraylist_people.get(1).getTemp_list().get(i);
+			  for (int i = 0; i < arraylist_people.get(init_son_index).getTemp_list().size(); i++) { 
+				  String[] value = arraylist_people.get(init_son_index).getTemp_list().get(i);
 				  if(value[8].equalsIgnoreCase(mom_filter)){
-					  arraylist_people.get(1).getTemp_list().remove(i);
+					  arraylist_people.get(init_mom_index).getTemp_list().remove(i);
 				  }
 				  
 			  }
 			
-			System.out.println("Finish File: " + arraylist_people.get(1).getID() + " Status :"
-					+ arraylist_people.get(1).getStatus() + " Size: " + arraylist_people.get(1).getTemp_list().size());
+			System.out.println("Finish File: " + arraylist_people.get(init_son_index).getID() + " Status :"
+					+ arraylist_people.get(init_mom_index).getStatus() + " Size: " + arraylist_people.get(init_son_index).getTemp_list().size());
 			}
 			temp_mom = null;
 			reader.finalize();
@@ -115,21 +134,21 @@ public class Processing {
 					System.out.println(i+" : "+value[1] + " "+value[2]+" "+value[3]+
 							" "+value[4]+" "+value[5]+" "+value[6]+" "+value[7]+" "+value[8]);
 			  }*/
-			arraylist_people.get(2).getTemp_list().remove(0);
+			arraylist_people.get(init_son_index).getTemp_list().remove(0);
 			 //List<String[]> son_list = arraylist_people.get(2).getTemp_list();
 			for(int j = 0; j< 10; j++){
-				for (int i = 0; i < arraylist_people.get(2).getTemp_list().size(); i++) { 
-					  String[] value = arraylist_people.get(2).getTemp_list().get(i);
+				for (int i = 0; i < arraylist_people.get(init_son_index).getTemp_list().size(); i++) { 
+					  String[] value = arraylist_people.get(init_son_index).getTemp_list().get(i);
 					 
 					  if(value[8].equalsIgnoreCase(son_filter)){
 							
-						  arraylist_people.get(2).getTemp_list().remove(i);
+						  arraylist_people.get(init_son_index).getTemp_list().remove(i);
 					  }
 					  
 					 
 				  }
-				System.out.println("Finish File: " + arraylist_people.get(2).getID() + " Status :"
-						+ arraylist_people.get(2).getStatus() + " Size: " + arraylist_people.get(2).getTemp_list().size());
+				System.out.println("Finish File: " + arraylist_people.get(init_son_index).getID() + " Status :"
+						+ arraylist_people.get(init_son_index).getStatus() + " Size: " + arraylist_people.get(init_son_index).getTemp_list().size());
 			}
 			  
 			/* List<String[]> son_list = arraylist_people.get(2).getTemp_list();
@@ -142,7 +161,7 @@ public class Processing {
 		
 		
 						temp_son = null;				
-									reader.finalize();
+						reader.finalize();
 		} catch (Throwable e) {																
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -157,7 +176,11 @@ public class Processing {
 		XSSFSheet sheet = workbook.createSheet("Merge_Data");
 		// This data needs to be written (Object[])
 		Map<String, Object[]> data = new TreeMap<String, Object[]>();
-		data.put("0", new Object[] { "CHROM", "Gene Name", "POS","Effect","HGVS.c","HGVS.p","dbsmp_142_ID","1000GP3_AF", "REF", "ALT", "DAD_ALT", "MOM_ALT" });
+		data.put("0", new Object[] { "CHROM", "Gene Name", "POS","DP","QUAL","Effect","Feature_ID"
+				,"HGVS.c","HGVS.p",
+				"dbsmp_142_ID","1000GP3_AF","1000Gp3_AFR_AF","1000Gp3_AMR_AF","1000Gp3_EAS_AF","1000Gp3_EUR_AF","1000Gp3_SAS_AF", 
+				"SIFT_score" , "Polyphen2_HDIV_score","Polyphen2_HVAR_score","Polyphen2_HVAR_pred" ,"CLINVAR_CLNSIG" ,
+				"REF", "ALT", "DAD_ALT", "MOM_ALT" });
 
 		int son_total = 0;
 		for (int i = 0; i < arraylist_people.size(); i++) {
@@ -168,45 +191,62 @@ public class Processing {
 		System.out.println("son_total :" + son_total);
 		int son_index = 0;
 		boolean match = true;
+		int parsed_value = 0;
+		String mom_ALT = "#N/A";
+		String dad_ALT = "#N/A";
 		// son by son
+		NumberFormat ukFormat = NumberFormat.getNumberInstance(Locale.UK);
 		for (int j = 0; j < son_total; j++) {
-			son_index = j + 2;
+			son_index = j + init_son_index;
 			// each son have row size
 			List<String[]> son_list = arraylist_people.get(son_index).getTemp_list();
 			for (int i = 0; i < son_list.size(); i++) {
 				String[] son_value = son_list.get(i);
 
 				// search against dad
-				List<String[]> dad_list = arraylist_people.get(0).getTemp_list();
-				String dad_ALT = "#N/A";
-				for (int z = 0; z < dad_list.size(); z++) {
-					String[] dad_value = dad_list.get(z);
-					if (son_value[1].equals(dad_value[1])) {
-						dad_ALT = dad_value[3];
-						break;
-					}
-				}
+				 if(!dad_file.equals("") || !dad_file.isEmpty()  ){
+						List<String[]> dad_list = arraylist_people.get(0).getTemp_list();
+						for (int z = 0; z < dad_list.size(); z++) {
+							String[] dad_value = dad_list.get(z);
+							if (son_value[1].equals(dad_value[1])) {
+								dad_ALT = dad_value[3];
+								break;
+							}
+						}
+				 }
+	
 				
 				// search against mom
-				List<String[]> mom_list = arraylist_people.get(1).getTemp_list();
-				String mom_ALT = "#N/A";
-				for (int z = 0; z < mom_list.size(); z++) {
-					String[] mom_value = mom_list.get(z);
-					if (son_value[1].equals(mom_value[1])) {
-						mom_ALT = mom_value[3];
-						break;
+				 if(!mom_file.equals("") || !mom_file.isEmpty()  ){
+						List<String[]> mom_list = arraylist_people.get(1).getTemp_list();
+						for (int z = 0; z < mom_list.size(); z++) {
+							String[] mom_value = mom_list.get(z);
+							if (son_value[1].equals(mom_value[1])) {
+								mom_ALT = mom_value[3];
+								break;
+							}
+						}
+				 }
+			
+				 
+				    try {
+				    	parsed_value = ukFormat.parse(son_value[1]).intValue();
+				    	
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-				}
-				
-				data.put("" + i + 1, new Object[] { son_value[0], son_value[12], Integer.parseInt(son_value[1]),son_value[10]
-						,son_value[17],son_value[18],son_value[28],son_value[29], son_value[2],
-						son_value[3], dad_ALT, mom_ALT });
+				data.put("" + i + 1, new Object[] { son_value[0], son_value[12], parsed_value,son_value[4] , son_value[6] ,son_value[10] ,son_value[14] 
+						,son_value[17],son_value[18],
+						son_value[28],son_value[29],son_value[30],son_value[31],son_value[32],son_value[33],son_value[34], 
+						son_value[38],son_value[ 40],son_value[ 42] ,son_value[43],son_value[44] ,
+						son_value[2],son_value[3], dad_ALT, mom_ALT });
 			}
 	
 		}
 		// Iterate over data and write to sheet
 		Set<String> keyset = data.keySet();
-		int rownum = 0;
+		int rownum = 30000;
 		for (String key : keyset) {
 			Row row = sheet.createRow(rownum++);
 			Object[] objArr = data.get(key);
