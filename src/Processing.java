@@ -25,6 +25,8 @@ public class Processing {
 	String dad_file,  mom_file ,son_file, save_to_file;
 	private String dad_filter , mom_filter ,son_filter;
 	private int init_son_index = 0;
+	private Map<String, Object[]> data;
+	public String ErrorMsg = "";
 	
 	public Processing(String dad_file, String mom_file, String son_file,String dad_filter , String mom_filter,String son_filter, String save_to_file) {
 		try {
@@ -44,29 +46,25 @@ public class Processing {
 	}
 	public void Start(){
 		 if(!dad_file.equals("") || !dad_file.isEmpty()  ){
-			 System.out.println("Read dad");
+		
 		 Read_data_Dad();
 		 init_son_index++;
 		 }else {
 			 System.out.println("Skip read dad");
 		 }
 		 if(!mom_file.equals("") || !mom_file.isEmpty()  ){
-			 System.out.println("Read mom");
+			
 		 Read_data_Mom();
 		 init_son_index++;
 		 }else{
 			 System.out.println("Skip read mom");
 		 }
 		 Read_data_Son();
-		 try {
-			Match();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 	}
 	public void Read_data_Dad() {
 		try {
+			System.out.println("Read dad");
 			File temp_dad = new File(dad_file);
 			XEXcelFileReader reader = new XEXcelFileReader(dad_file);
 			arraylist_people.add(new People(temp_dad.getName(), "dad", reader.readRows()));
@@ -88,6 +86,7 @@ public class Processing {
 			}
 			temp_dad = null;
 			reader.finalize();
+			System.out.println("Read dad finish");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -96,7 +95,7 @@ public class Processing {
 
 	public void Read_data_Mom() {
 		try {
-		
+			 System.out.println("Read mom");
 			File temp_mom = new File(mom_file);
 			XEXcelFileReader reader = new XEXcelFileReader(mom_file);
 			arraylist_people.add(new People(temp_mom.getName(), "mom", reader.readRows()));
@@ -117,13 +116,16 @@ public class Processing {
 			}
 			temp_mom = null;
 			reader.finalize();
+			 System.out.println("Read mom finish");
 		} catch (Throwable e) {
 			e.printStackTrace();
+			ErrorMsg = e.getMessage();
 		}
 	}
 
 	public void Read_data_Son() {
 		try {
+			 System.out.println("Read son");
 			File temp_son = new File(son_file);
 			XEXcelFileReader reader = new XEXcelFileReader(son_file);
 			arraylist_people.add(new People(temp_son.getName(), "son", reader.readRows()));
@@ -165,17 +167,14 @@ public class Processing {
 		} catch (Throwable e) {																
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			ErrorMsg = e.getMessage();
 		}
 	}
 
 	public void Match() throws IOException {
-		// Blank workbook
-		XSSFWorkbook workbook = new XSSFWorkbook(); 
-
-		// Create a blank sheet
-		XSSFSheet sheet = workbook.createSheet("Merge_Data");
+		
 		// This data needs to be written (Object[])
-		Map<String, Object[]> data = new TreeMap<String, Object[]>();
+		data = new TreeMap<String, Object[]>();
 		data.put("0", new Object[] { "CHROM", "Gene Name", "POS","DP","QUAL","Effect","Feature_ID"
 				,"HGVS.c","HGVS.p",
 				"dbsmp_142_ID","1000GP3_AF","1000Gp3_AFR_AF","1000Gp3_AMR_AF","1000Gp3_EAS_AF","1000Gp3_EUR_AF","1000Gp3_SAS_AF", 
@@ -195,6 +194,7 @@ public class Processing {
 		String mom_ALT = "#N/A";
 		String dad_ALT = "#N/A";
 		// son by son
+		System.out.println("Start Matching ");
 		NumberFormat ukFormat = NumberFormat.getNumberInstance(Locale.UK);
 		for (int j = 0; j < son_total; j++) {
 			son_index = j + init_son_index;
@@ -235,6 +235,7 @@ public class Processing {
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						ErrorMsg = e.getMessage();
 					}
 				data.put("" + i + 1, new Object[] { son_value[0], son_value[12], parsed_value,son_value[4] , son_value[6] ,son_value[10] ,son_value[14] 
 						,son_value[17],son_value[18],
@@ -244,9 +245,22 @@ public class Processing {
 			}
 	
 		}
+		System.out.println("Finish Matching ");
+	
+	
+		
+	
+	
+	}
+	public  void WriteFile(){
+		// Blank workbook	
+		XSSFWorkbook workbook= new XSSFWorkbook(); 
+		// Create a blank sheet
+		XSSFSheet sheet  = workbook.createSheet("Merge_Data");
+
 		// Iterate over data and write to sheet
 		Set<String> keyset = data.keySet();
-		int rownum = 30000;
+		int rownum = 0;
 		for (String key : keyset) {
 			Row row = sheet.createRow(rownum++);
 			Object[] objArr = data.get(key);
@@ -258,25 +272,39 @@ public class Processing {
 				else if (obj instanceof Integer)
 					cell.setCellValue((Integer) obj);
 			}
+			objArr = null;
 		}
-
+		keyset = null;
 		try {
 			// Write the workbook in file system
 			FileOutputStream out = new FileOutputStream(new File(this.save_to_file));
 			workbook.write(out);
 			out.close();
-			System.out.println("written successfully on disk.");
+			workbook.close();
+			System.out.println("Written successfully on disk.");
 			finish =true;
+			workbook=null;
+			out=null;
+			data.clear();
+			data=null;
 		} catch (Exception e) {
+			ErrorMsg = e.getMessage();
 			e.printStackTrace();
 		}
 		
-		
-	
-
 	}
+	
 	public boolean finish(){
 		return this.finish;
 	}
-
+	public void destroy() {
+        try {
+        	
+        	
+        	 super.finalize();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//this is only for demonstrate my idea
+    }
 }

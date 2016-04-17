@@ -2,6 +2,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
@@ -10,6 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JDialog;
@@ -17,6 +20,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.UIManager;
+import java.awt.Label;
 public class AutoRecessive {
 
 	JFrame frmFern;
@@ -60,16 +64,18 @@ public class AutoRecessive {
 		frmFern.getContentPane().setBackground(new Color(255, 228, 225));
 		frmFern.setBackground(Color.WHITE);
 		frmFern.setTitle("AR");
-		frmFern.setBounds(100, 100, 450, 300);
+		frmFern.setBounds(100, 100, 450,400);
 		//frmFern.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmFern.getContentPane().setLayout(null);
 		
-		final Loading loading_panel = new Loading();
-		loading_panel.setVisible(true);
-		frmFern.getContentPane().add(loading_panel);
+		final JProgressBar progressBar = new JProgressBar();
+		progressBar.setBounds(62, 300, 288, 14);
+		frmFern.getContentPane().add(progressBar);
+		progressBar.setStringPainted(true);
+		progressBar.setVisible(true);
 		
 		textField_dad_dir = new JTextField("");
-		textField_dad_dir.setBounds(36, 20, 308, 19);
+		textField_dad_dir.setBounds(36, 19, 308, 19);
 		frmFern.getContentPane().add(textField_dad_dir);
 		textField_dad_dir.setColumns(10);
 		
@@ -83,7 +89,7 @@ public class AutoRecessive {
 		textField_mom_dir.setColumns(10);
 		
 		JLabel lblMom = new JLabel("Mom:");
-		lblMom.setBounds(36, 50, 70, 15);
+		lblMom.setBounds(36, 51, 70, 15);
 		frmFern.getContentPane().add(lblMom);
 		chooser_dad = new JFileChooser();
 		chooser_dad.setCurrentDirectory(new java.io.File("."));
@@ -103,6 +109,13 @@ public class AutoRecessive {
 		            }
 		        }
 		});
+		URL url = getClass().getResource("81.gif");
+		ImageIcon imageIcon = new ImageIcon(url);
+		final JLabel lbl_icon = new JLabel(imageIcon);
+		lbl_icon.setBounds(147, 181, 117, 112);
+		frmFern.getContentPane().add(lbl_icon);
+		lbl_icon.setVisible(false);
+		
 		Button_add_Dad.setBounds(354, 17, 70, 25);
 		frmFern.getContentPane().add(Button_add_Dad);
 		
@@ -129,7 +142,7 @@ public class AutoRecessive {
 		frmFern.getContentPane().add(Button_add_Mom);
 		
 		textField_son_dir = new JTextField("");
-		textField_son_dir.setBounds(36, 113, 314, 19);
+		textField_son_dir.setBounds(36, 113, 308, 19);
 		frmFern.getContentPane().add(textField_son_dir);
 		textField_son_dir.setColumns(10);
 		
@@ -161,15 +174,14 @@ public class AutoRecessive {
 		
 		
 		final JLabel lbl_status = new JLabel("Online");
-		lbl_status.setBounds(75, 211, 295, 15);
+		lbl_status.setBounds(62, 330, 295, 15);
 		frmFern.getContentPane().add(lbl_status);
 		
-		JButton btnProcess = new JButton("Run");
+		final JButton btnProcess = new JButton("Run");
 		btnProcess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//loading_panel.setVisible(true);
-				JProgressBar progressBar = new JProgressBar();
-				progressBar.setIndeterminate(true);
+				btnProcess.setEnabled(false);
 				final JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setSelectedFile(new File(".xlsx"));
 				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -177,29 +189,52 @@ public class AutoRecessive {
 				  final File save_to_file = fileChooser.getSelectedFile();
 				 
 				  lbl_status.setText("Keep clam and have a cup of tea");
-				  Thread Jane = new Thread(){
+				 final long startTime = System.currentTimeMillis();
+				 lbl_icon.setVisible(true);
+				 Thread Jane = new Thread(){
+					
+					 Processing process= new Processing(textField_dad_dir.getText(), textField_mom_dir.getText(), textField_son_dir.getText(),dad_model,mom_model,son_model,save_to_file.getAbsolutePath());
 					    public void run(){
-					    	 final Processing process= new Processing(textField_dad_dir.getText(), textField_mom_dir.getText(), textField_son_dir.getText(),dad_model,mom_model,son_model,save_to_file.getAbsolutePath());
-					   
-					           SwingUtilities.invokeLater(new Runnable(){
-					             public void run(){
-					            	
-					            	  process.Start();
-					            	  if(process.finish()){
-					            		  JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Complete !! check file @"+fileChooser.getSelectedFile());
-										  lbl_status.setText("Online Now");
-					            	  }else{
-					            		  JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Error !! contact Fern asap");
-					            	  }
-									
-					             }
-					           }); 
-					      
+					    	  progressBar.setValue(25);
+			            	  process.Start();
+			            	  progressBar.setValue(50);
+			            	  try {
+			            	  process.Match();
+							  progressBar.setValue(75);
+							  
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+			            	  process.WriteFile();
+			            	  if(process.finish()){
+			            		  progressBar.setValue(100);
+			            		  JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Complete !! check file @"+fileChooser.getSelectedFile());
+								  lbl_status.setText("Online Now");
+								
+			            	  }else{
+			            		  JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Error !! contact Fern asap"+"\n"+"Msg: "+process.ErrorMsg);
+			            	  }
+			            	  process.destroy();
+			            	  
+							    long stopTime = System.currentTimeMillis();
+							    long elapsedTime = stopTime - startTime;
+							    System.out.println("Usage time (Sec):"+elapsedTime/1000);
+							    Report();
+							    lbl_icon.setVisible(false);
+							    progressBar.setValue(0);
+								btnProcess.setEnabled(true);
+								process = null;
+			            
 					    }
 					};
 					Jane.start();
-				 
-			
+					
+			        /* SwingUtilities.invokeLater(new Runnable(){
+			             public void run(){
+			            	 
+			             }
+			           }); */
 				  // save to file
 				/*  Processing process= new Processing(textField_dad_dir.getText(), textField_mom_dir.getText(), textField_son_dir.getText(),save_to_file.getAbsolutePath());
 				  process.Read_data_Dad();
@@ -211,20 +246,22 @@ public class AutoRecessive {
 				  JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Complete !! check file @"+fileChooser.getSelectedFile());
 				  lbl_status.setText("Online Now");*/
 				
+				}else{
+					btnProcess.setEnabled(true);
 				}
 				
 				//loading_panel.setVisible(false);
 			}
 		});
-		btnProcess.setBounds(310, 235, 117, 25);
+		btnProcess.setBounds(307, 143, 117, 25);
 		frmFern.getContentPane().add(btnProcess);
 		
 		JLabel lblStatus = new JLabel("Status :");
-		lblStatus.setBounds(12, 211, 70, 15);
+		lblStatus.setBounds(10, 330, 70, 15);
 		frmFern.getContentPane().add(lblStatus);
 		
 		JLabel lbl_dad_filter = new JLabel("-");
-		lbl_dad_filter.setBounds(83, 0, 78, 14);
+		lbl_dad_filter.setBounds(79, 0, 78, 14);
 		frmFern.getContentPane().add(lbl_dad_filter);
 		lbl_dad_filter.setText(dad_model);
 		JLabel lbl_mom_filter = new JLabel("-");
@@ -232,9 +269,35 @@ public class AutoRecessive {
 		frmFern.getContentPane().add(lbl_mom_filter);
 		lbl_mom_filter.setText(mom_model);
 		JLabel lbl_son_filter = new JLabel("-");
-		lbl_son_filter.setBounds(83, 97, 78, 14);
+		lbl_son_filter.setBounds(79, 97, 78, 14);
 		frmFern.getContentPane().add(lbl_son_filter);
 		lbl_son_filter.setText(son_model);
+		
+		
+
 	
+	
+	}
+	
+	public void Report(){
+		int mb = 1024 * 1024; 
+		 
+		// get Runtime instance
+		Runtime instance = Runtime.getRuntime();
+ 
+		System.out.println("***** Heap utilization statistics [MB] *****\n");
+ 
+		// available memory
+		System.out.println("Total Memory: " + instance.totalMemory() / mb);
+		instance.gc();
+		// free memory
+		System.out.println("Free Memory: " + instance.freeMemory() / mb);
+ 
+		// used memory
+		System.out.println("Used Memory: "
+				+ (instance.totalMemory() - instance.freeMemory()) / mb);
+ 
+		// Maximum available memory
+		System.out.println("Max Memory: " + instance.maxMemory() / mb);
 	}
 }

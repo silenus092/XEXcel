@@ -125,6 +125,8 @@ public class XEXcelFileReader implements IDataFileReader {
  protected void finalize() throws Throwable {
   if (opcPkg != null)
    opcPkg.close();
+  if(xmlReader != null)
+  xmlReader.close();
   super.finalize();
  }
  
