@@ -51,29 +51,17 @@ public class Menu {
 		frmMacsim.setBounds(100, 100, 450, 300);
 		frmMacsim.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JButton btnNewButton_2 = new JButton("Autosomal Recessive");
+		JButton btnNewButton_2 = new JButton("Match Excels");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FilterOut dialog = new FilterOut("Autosomal Recessive");
+				FilterOut dialog = new FilterOut("Match Excels");
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
 		});
 		btnNewButton_2.setBounds(28, 63, 233, 23);
-		
-		JButton btnNewButton = new JButton("Autosomal Dominant");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnNewButton.setBounds(28, 99, 233, 23);
 		frmMacsim.getContentPane().setLayout(null);
 		frmMacsim.getContentPane().add(btnNewButton_2);
-		frmMacsim.getContentPane().add(btnNewButton);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(182, 187, 117, 67);
-		frmMacsim.getContentPane().add(panel);
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 434, 21);
@@ -88,7 +76,7 @@ public class Menu {
 		JMenuItem mntmHelp = new JMenuItem("About");
 		mnAbout.add(mntmHelp);
 		
-		JLabel lblNewLabel = new JLabel("Select Model");
+		JLabel lblNewLabel = new JLabel("Select Tools");
 		lblNewLabel.setBounds(28, 32, 127, 14);
 		frmMacsim.getContentPane().add(lblNewLabel);
 	}

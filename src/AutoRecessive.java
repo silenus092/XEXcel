@@ -79,8 +79,8 @@ public class AutoRecessive {
 		frmFern.getContentPane().add(textField_dad_dir);
 		textField_dad_dir.setColumns(10);
 		
-		JLabel lblDad = new JLabel("Dad:");
-		lblDad.setBounds(36, 0, 46, 15);
+		JLabel lblDad = new JLabel("Dad remove:");
+		lblDad.setBounds(36, 0, 97, 15);
 		frmFern.getContentPane().add(lblDad);
 		
 		textField_mom_dir = new JTextField("");
@@ -88,8 +88,8 @@ public class AutoRecessive {
 		frmFern.getContentPane().add(textField_mom_dir);
 		textField_mom_dir.setColumns(10);
 		
-		JLabel lblMom = new JLabel("Mom:");
-		lblMom.setBounds(36, 51, 70, 15);
+		JLabel lblMom = new JLabel("Mom remove:");
+		lblMom.setBounds(36, 51, 97, 15);
 		frmFern.getContentPane().add(lblMom);
 		chooser_dad = new JFileChooser();
 		chooser_dad.setCurrentDirectory(new java.io.File("."));
@@ -142,12 +142,12 @@ public class AutoRecessive {
 		frmFern.getContentPane().add(Button_add_Mom);
 		
 		textField_son_dir = new JTextField("");
-		textField_son_dir.setBounds(36, 113, 308, 19);
+		textField_son_dir.setBounds(36, 114, 308, 19);
 		frmFern.getContentPane().add(textField_son_dir);
 		textField_son_dir.setColumns(10);
 		
-		JLabel lblSon = new JLabel("Son:");
-		lblSon.setBounds(36, 97, 46, 15);
+		JLabel lblSon = new JLabel("Son remove:");
+		lblSon.setBounds(36, 97, 97, 15);
 		frmFern.getContentPane().add(lblSon);
 		
 		JButton btnNewButton_2 = new JButton("Add");
@@ -174,7 +174,7 @@ public class AutoRecessive {
 		
 		
 		final JLabel lbl_status = new JLabel("Online");
-		lbl_status.setBounds(62, 330, 295, 15);
+		lbl_status.setBounds(72, 330, 295, 15);
 		frmFern.getContentPane().add(lbl_status);
 		
 		final JButton btnProcess = new JButton("Run");
@@ -195,28 +195,34 @@ public class AutoRecessive {
 					
 					 Processing process= new Processing(textField_dad_dir.getText(), textField_mom_dir.getText(), textField_son_dir.getText(),dad_model,mom_model,son_model,save_to_file.getAbsolutePath());
 					    public void run(){
+					    	int flag = 0;
 					    	  progressBar.setValue(25);
-			            	  process.Start();
-			            	  progressBar.setValue(50);
-			            	  try {
-			            	  process.Match();
-							  progressBar.setValue(75);
-							  
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-			            	  process.WriteFile();
-			            	  if(process.finish()){
-			            		  progressBar.setValue(100);
-			            		  JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Complete !! check file @"+fileChooser.getSelectedFile());
-								  lbl_status.setText("Online Now");
+					    	  flag =process.Start();
+					    	  if(flag ==1){
+					    		  JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Error !! contact Fern asap"+"\n"+"Msg: "+process.ErrorMsg);
+					    	  }else{
+					    		  progressBar.setValue(50);
+					    		  flag = process.Match();
+					    		  	if(flag ==1){
+					    		  		JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Error !! contact Fern asap"+"\n"+"Msg: "+process.ErrorMsg);
+					    		  	}else{
+					    		  		progressBar.setValue(75);
+					    		  		process.WriteFile();
+					    		  			
+					    		  		if(process.finish()){
+				    		  				progressBar.setValue(100);
+				    		  				JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Complete !! check file @"+fileChooser.getSelectedFile());
+				    		  				
 								
-			            	  }else{
-			            		  JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Error !! contact Fern asap"+"\n"+"Msg: "+process.ErrorMsg);
-			            	  }
-			            	  process.destroy();
-			            	  
+				    		  			}else{
+				    		  				JOptionPane.showInternalMessageDialog(frmFern.getContentPane(), "Error !! contact Fern asap"+"\n"+"Msg: "+process.ErrorMsg);
+				    		  			}
+					    		  	}
+					    	  }
+					    		
+							  
+			            	    process.destroy();
+			            	   lbl_status.setText("Online Now");
 							    long stopTime = System.currentTimeMillis();
 							    long elapsedTime = stopTime - startTime;
 							    System.out.println("Usage time (Sec):"+elapsedTime/1000);
@@ -261,15 +267,15 @@ public class AutoRecessive {
 		frmFern.getContentPane().add(lblStatus);
 		
 		JLabel lbl_dad_filter = new JLabel("-");
-		lbl_dad_filter.setBounds(79, 0, 78, 14);
+		lbl_dad_filter.setBounds(158, 0, 106, 14);
 		frmFern.getContentPane().add(lbl_dad_filter);
 		lbl_dad_filter.setText(dad_model);
 		JLabel lbl_mom_filter = new JLabel("-");
-		lbl_mom_filter.setBounds(79, 51, 97, 14);
+		lbl_mom_filter.setBounds(154, 50, 97, 14);
 		frmFern.getContentPane().add(lbl_mom_filter);
 		lbl_mom_filter.setText(mom_model);
 		JLabel lbl_son_filter = new JLabel("-");
-		lbl_son_filter.setBounds(79, 97, 78, 14);
+		lbl_son_filter.setBounds(154, 98, 78, 14);
 		frmFern.getContentPane().add(lbl_son_filter);
 		lbl_son_filter.setText(son_model);
 		
